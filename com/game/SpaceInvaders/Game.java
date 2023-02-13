@@ -31,7 +31,6 @@ public class Game{
     //current direction of enemny formation
     boolean goLeft;
     boolean justArrived=false;
-
     //init-ed from gridRows and gridColumns
     int[][] grid;
     GUI window;
@@ -88,7 +87,6 @@ public class Game{
           int leftMargin = sideMargins + this.relativeLocX;
           //where currRow will be on the grid
           int YPosition = i + this.relativeLocY;
-
 
             Arrays.fill(grid[YPosition],0);
           //modify the grid's row based on currRow

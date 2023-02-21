@@ -6,14 +6,14 @@ public class Player {
     //if player is 1 space to the left of the center, then relativeLoc is -1,
     int relativeLoc;
     //number of grid travelled per second
-    int bulletSpeed;
+    <List <int[]>> bullets = new List()<>
 
     public Player()
     {
         this.score = 0;
         this.lives = 3;
         this.relativeLoc = 0;
-        this.bulletSpeed = 2;
+//        this.bulletSpeed = 2;
     }
 
 

@@ -30,11 +30,14 @@ public class SpaceInvaders  {
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==91) {
                     newRound.player.relativeLoc--;
-                    newRound.renderGrid();
+                    newRound.renderPlayer();
                 }
                 if(e.getKeyCode()==93) {
                     newRound.player.relativeLoc++;
-                    newRound.renderGrid();
+                    newRound.renderPlayer();
+                }
+                if(e.getKeyCode()==49){
+                    newRound.player.
                 }
             }
             @Override
@@ -43,8 +46,7 @@ public class SpaceInvaders  {
         };
 
         newRound.window.addKeyListener(myListener);
-
-        newRound.renderGrid();
+        newRound.renderEnemy();
         newRound.start();
 
     }

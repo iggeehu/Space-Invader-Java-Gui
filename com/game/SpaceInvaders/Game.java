@@ -1,7 +1,5 @@
 package com.game.SpaceInvaders;
 
-import javax.swing.*;
-
 import static java.util.concurrent.TimeUnit.*;
 
 import java.util.Arrays;
@@ -17,13 +15,10 @@ public class Game{
     //least amount of distance between player and enemy to make the game playable
     static int minWhiteSpace = 5;
     static int playerRows = 2;
-
     EnemyRow[] formation;
     Player player;
-
     //attributes related to location n speed of enemy block
     int enemySpeed;
-
     // -1 = enemy is 1 step left of center
     public int relativeLocX = 0;
     // 1 = enemy is 1 step down from the top
@@ -44,35 +39,38 @@ public class Game{
         int maxRowLen = formation[0].arrayLen;
         for (int i = 1; i < formation.length; i++) {
             maxRowLen = Math.max(maxRowLen, formation[i].arrayLen);
+
+            if (gridRows - formation.length - playerRows < minWhiteSpace) {
+                throw new IllegalArgumentException("not enough distance between enemy and player");
+            }
+            if (maxRowLen > gridColumns) {
+                throw new IllegalArgumentException("there's one row of enemy that is too wide for the screen");
+            }
+            int sideMargin = (gridColumns - maxRowLen) / 2;
+            if (sideMargin / enemyInitialSpeed < 5) {
+                throw new IllegalArgumentException("the initial speed is too fast for optimal gameplay");
+            }
+
+            this.formation = formation;
+            this.player = player;
+            this.enemySpeed = enemyInitialSpeed;
+
+
+            //initialize grid or game interface
+            this.grid = new int[gridRows][gridColumns];
+            //initialize the two bottom rows (player zone) as 1s
+            for (i = gridRows - playerRows; i < gridRows; i++) {
+                this.grid[i][0] = 1;
+                Arrays.fill(this.grid[i], 1);
+            }
+            //place the player at the center
+            this.grid[gridRows - 1][gridColumns / 2] = 2;
+            this.window = new GUI(this.grid);
         }
-
-        if (gridRows - formation.length - playerRows < minWhiteSpace) {
-            throw new IllegalArgumentException("not enough distance between enemy and player");}
-        if (maxRowLen > gridColumns) {
-            throw new IllegalArgumentException("there's one row of enemy that is too wide for the screen");}
-        int sideMargin = (gridColumns - maxRowLen) / 2;
-        if (sideMargin / enemyInitialSpeed < 5) {
-            throw new IllegalArgumentException("the initial speed is too fast for optimal gameplay");}
-
-        this.formation = formation;
-        this.player = player;
-        this.enemySpeed = enemyInitialSpeed;
-
-
-        //initialize grid or game interface
-        this.grid=new int[gridRows][gridColumns];
-        //initialize the two bottom rows (player zone) as 1s
-        for(int i=gridRows-playerRows; i<gridRows;i++)
-        {
-            this.grid[i][0]=1;
-            Arrays.fill(this.grid[i], 1);}
-        //place the player at the center
-        this.grid[gridRows - 1][gridColumns / 2] = 2;
-        this.window = new GUI(this.grid);
     }
 
     //update game state
-    public void renderGrid() {
+    public void renderEnemy() {
         //make anything above the top row of enemies 0;
         for(int i=0; i<this.relativeLocY; i++)
         {Arrays.fill(this.grid[i],0);}
@@ -94,11 +92,15 @@ public class Game{
               this.grid[YPosition][j+leftMargin]=currRow.arrayRep[j];
           }
         }
+
+        this.window.repaint(this.grid);
+    }
+
+    public void renderPlayer(){
         //render player
-//        System.out.println(this.player.relativeLoc);
         Arrays.fill(this.grid[gridRows-1], 1);
         this.grid[gridRows-1][gridColumns/2+this.player.relativeLoc]=2;
-        //rerender the UI
+        //rerender the UI]
         this.window.repaint(this.grid);
     }
 
@@ -153,15 +155,13 @@ public class Game{
         else{this.formationMove();
             if(this.reachedWall()){justArrived=false;}
         }
-        this.renderGrid();
+        this.renderEnemy();
     }
 
     public void start(){
-        System.out.println("started");
         final Runnable task = new Runnable() {
             public void run(){ runnableBySecond(); }
         };
-
         final ScheduledFuture<?> taskHandle =
                     this.scheduler.scheduleAtFixedRate(task, 3, 1, SECONDS);
 
@@ -169,7 +169,6 @@ public class Game{
             if(playerWin()) System.out.println("playersWIn");
             taskHandle.cancel(true);}
     }
-
 
 }
 

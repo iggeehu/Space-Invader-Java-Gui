@@ -1,13 +1,11 @@
 package com.game.SpaceInvaders;
-
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 
-public class GUI extends JFrame {
+public class GUI extends JFrame{
     int[][] grid;
-
     JPanel panel;
     //graphic slots corresponding to grid
     JButton[][] buttons;
@@ -26,11 +24,14 @@ public class GUI extends JFrame {
 
         for (int i = 0; i < r; i++) {
             for (int j = 0; j < c; j++) {
-                if (grid[i][j] == 0 || grid[i][j] == 1) {
-                    this.buttons[i][j] = new JButton("", null);
-                } else if (grid[i][j] == 2) {
-                    this.buttons[i][j] = new JButton("M", null);
-                } else {
+                if(grid[i][j]==0 || grid[i][j]==1)
+                {
+                    this.buttons[i][j]=new JButton("", null);
+                }
+                else if(grid[i][j]==2)
+                {this.buttons[i][j] = new JButton("M", null);
+                }
+                else{
                     this.buttons[i][j] = new JButton("$", null);
                 }
                 this.buttons[i][j].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -45,33 +46,25 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
-    public void repaint(int[][] grid) {
-        synchronized (this.panel.getTreeLock()) {
-
-//        this.panel = new JPanel(new GridLayout(grid.length, grid[0].length, 1, 1));
-            for (int i = 0; i < grid.length; i++) {
-                for (int j = 0; j < grid[0].length; j++) {
-                    if (grid[i][j] == 1 || grid[i][j] == 0) {
-                        this.buttons[i][j].setText("");
-                    }
-                    else if(grid[i][j]==2)
-                    {this.buttons[i][j].setText("M");}
-                    else {
-                        this.buttons[i][j].setText("$");
-                    }
-                    //JLabel l = new JLabel(new ImageIcon("image_file.png"), JLabel.CENTER);
-                    this.buttons[i][j].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-                    this.buttons[i][j].setFont(this.buttons[i][j].getFont().deriveFont(8f));
-//                if(i>=grid.length-2){this.buttons[i][j].setVisible(false);}
+    public void repaint(int[][] grid)
+    {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if(grid[i][j]==1||grid[i][j]==0)
+                {
+                    this.buttons[i][j].setText("");
                 }
+                else if(grid[i][j]==2)
+                {this.buttons[i][j].setText("M");}
+                else{
+                    this.buttons[i][j].setText("$");
+                }
+                //JLabel l = new JLabel(new ImageIcon("image_file.png"), JLabel.CENTER);
             }
-//        this.panel.getComponent(0)
-
-            revalidate();
-            repaint();
         }
+//        add(this.panel);
+        revalidate();
+        repaint();
+
     }
-
 }
-
-
